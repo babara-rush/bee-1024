@@ -44,7 +44,7 @@ export class Bee {
     this.drawAmmo(ctx);
     if (time - this.lastShootTime < this.shootSpeed) return;
     this.lastShootTime = time;
-    this.ammo.push(new Ammo(this.x - this.width / 2, this.y + 5));
-    this.ammo.push(new Ammo(this.x + this.width / 2, this.y + 5));
+    this.ammo.push(new Ammo(this.x + this.width / 3, this.y + 5));
+    this.ammo.push(new Ammo(this.x + (2 * this.width) / 3, this.y + 5));
   }
 }
