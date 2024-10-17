@@ -1,5 +1,3 @@
-import {Bee} from './bee.js';
-import {Opponent} from './opponent.js';
 import { Control } from "./control.js";
 
 const canvas = document.querySelector('#game');
@@ -10,8 +8,7 @@ ctx.lineCap = 'round';
 let control
 
 function init() {
-  const bee = new Bee();
-  control = new Control(ctx, bee);
+  control = new Control(ctx);
   control.addLeftEvent();
   draw();
 }
