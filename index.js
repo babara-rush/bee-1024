@@ -1,4 +1,5 @@
 import { Control } from "./control.js";
+import { AudioControl } from './audio.js';
 
 const canvas = document.querySelector('#game');
 canvas.width = window.innerWidth;

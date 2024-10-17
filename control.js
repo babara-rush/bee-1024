@@ -1,11 +1,11 @@
-import {Opponent} from "./opponent.js";
-import {Bee} from "./bee.js";
+import { Opponent } from "./opponent.js";
+import { Bee } from "./bee.js";
 
 export class Control {
   context;
   bee;
-  opponentCount = 10;
-  opponentCol = 5;
+  opponentCount = 5;
+  opponentCol = 10;
   opponent = [];
   isGameOver = false;
   isSuccess = false;
@@ -78,17 +78,19 @@ export class Control {
   }
 
   drawOpponent() {
+    this.opponent = this.opponent.filter(opponent => !opponent.destroyed)
     this.opponent.forEach(opponent => {
-      this.context.drawImage(opponent.image, opponent.x, opponent.y, opponent.width, opponent.height);
+      // this.context.drawImage(opponent.image, opponent.x, opponent.y, opponent.width, opponent.height);
+      opponent.draw(this.context);
     });
   }
 
   addLeftEvent() {
     window.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowLeft') {
+      if (['ArrowLeft', 'a'].includes(e.key)) {
         this.bee.toLeft();
       }
-      if (e.key === 'ArrowRight') {
+      if (['ArrowRight', 'd'].includes(e.key)) {
         this.bee.toRight();
       }
     });

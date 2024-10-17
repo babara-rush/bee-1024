@@ -1,14 +1,23 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>蜜蜂大战</title>
   <style>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
     canvas {
       width: 100vw;
       height: 100vh;
+      display: block;
     }
+
     .result {
       position: absolute;
       top: 0;
@@ -18,7 +27,7 @@
       display: none;
       z-index: 2;
     }
-    
+
     .result[data-show='true'] {
       display: flex;
       background-color: rgba(255, 255, 255, 0.3);
@@ -27,18 +36,19 @@
       flex-direction: column;
       gap: 20px;
     }
-    
+
     img {
-        display: none;
+      display: none;
     }
-    
+
     @keyframes showImage {
-        from {
-            transform: scale(0);
-        }
-        to {
-            transform: scale(1);
-        }
+      from {
+        transform: scale(0);
+      }
+
+      to {
+        transform: scale(1);
+      }
     }
 
     .result[data-show='true'] img[data-show='true'] {
@@ -46,7 +56,7 @@
       animation-name: showImage;
       animation-duration: 0.5s;
     }
-    
+
     button {
       margin-top: 20px;
       padding: 10px 20px;
@@ -57,19 +67,22 @@
       cursor: pointer;
       display: none;
     }
+
     button[data-show='true'] {
       display: block;
     }
   </style>
 </head>
+
 <body>
-<canvas id="game"></canvas>
-<div id="result" class="result">
-  <img id="fail" src="./game_over.jpg" alt="" >
-  <img id="success" src="./game_success.jpg" alt="" >
-  <button id="fail-button">老子不信了，重来</button>
-  <button id="success-button">果然我是最棒的</button>
-</div>
-<script src="./index.js" type="module"></script>
+  <canvas id="game"></canvas>
+  <div id="result" class="result">
+    <img id="fail" src="./game_over.jpg" alt="">
+    <img id="success" src="./game_success.jpg" alt="">
+    <button id="fail-button">老子不信了，重来</button>
+    <button id="success-button">果然我是最棒的</button>
+  </div>
+  <script src="./index.js" type="module"></script>
 </body>
+
 </html>

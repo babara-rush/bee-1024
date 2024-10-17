@@ -1,4 +1,5 @@
-import {Ammo} from "./ammo.js";
+import { Ammo } from "./ammo.js";
+import { AudioControl } from './audio.js'
 
 const FlyAngleRange = [[Math.PI * 3 / 4, Math.PI * 5 / 4], [-1 * Math.PI / 4, Math.PI / 4]];
 
@@ -9,6 +10,7 @@ export class Opponent {
   height = 100;
   step = 50;
   image = new Image(this.width, this.height);
+  boomImage = new Image();
   lastShootTime = 0;
   shootSpeed = 2000;
   ammo = [];
@@ -18,6 +20,8 @@ export class Opponent {
   flyGap = 200;
   gap = 10;
   destroyed = false;
+  dying = -1;
+  lastDyingTime = 0;
 
   constructor(x, y) {
     this.x = x;
@@ -66,11 +70,11 @@ export class Opponent {
       return;
     }
     if (isTop) {
-      this.angle =  -1 * this.angle;
+      this.angle = -1 * this.angle;
       return;
     }
     if (isBottom) {
-      this.angle =  -1 * this.angle;
+      this.angle = -1 * this.angle;
       return;
     }
     if (isLeft) {
@@ -97,24 +101,62 @@ export class Opponent {
   }
 
   loadImage() {
-    if(this.imgLoaded) return Promise.resolve();
-    return new Promise(resolve => {
-      this.image.src = './bee.jpeg';
-      this.imgLoaded = true;
-      this.image.onload = () => resolve();
-    })
+    if (this.imgLoaded) return Promise.resolve();
+
+    return Promise.all([
+      new Promise(resolve => {
+        this.image.onload = () => resolve();
+        this.image.src = './enemy.png';
+        this.imgLoaded = true;
+      }),
+      new Promise(resolve => {
+        this.boomImage.onload = () => resolve();
+        this.boomImage.src = "./explosion.png";
+      })
+    ]);
+  }
+
+  draw(ctx) {
+    if (this.dying >= 8) {
+      AudioControl.playExplosion()
+      this.destroyed = true
+      return
+    }
+    // dying state & play animation
+    if (this.dying !== -1) {
+      const delta = Date.now() - this.lastDyingTime;
+      if (delta > 16) {
+        ctx.drawImage(this.boomImage,
+          64 * this.dying, 0,
+          64, 64,
+          this.x, this.y,
+          this.width, this.height,
+        );
+        this.dying++;
+        this.lastDyingTime = Date.now()
+      }
+
+      return
+    }
+    ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
   }
 
   collisionCheck(bee, ctx) {
-    if(bee.ammo.some(ammo => ammo.isHitBee(this))) {
-      this.destroy(ctx)
+    if (this.destroyed || this.dying !== -1) {
+      return
+    }
+    const ammoPos = bee.ammo.findIndex(ammo => ammo.isHitBee(this));
+    if (ammoPos != -1) {
+      console.log('触发')
+      bee.ammo.splice(ammoPos, 1)
+      this.destroy()
     }
   }
 
-  destroy(ctx) {
-    this.destroyed = true;
+  destroy() {
+    this.lastDyingTime = Date.now();
+    this.dying = 0;
     this.ammo = [];
-    ctx.clearRect(this.x, this.y, this.width, this.height);
   }
 
   drawAmmo(ctx) {
@@ -134,6 +176,6 @@ export class Opponent {
     this.drawAmmo(ctx);
     if (!time || time - this.lastShootTime < this.shootSpeed) return;
     this.lastShootTime = time;
-    this.ammo.push(new Ammo(this.x + (2 * this.width) / 3, this.y + this.height + 5,  (Math.PI / 2)));
+    this.ammo.push(new Ammo(this.x + (2 * this.width) / 3, this.y + this.height + 5, (Math.PI / 2)));
   }
 }
