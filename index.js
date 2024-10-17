@@ -11,11 +11,9 @@ let control
 
 function init() {
   const bee = new Bee();
-  bee.loadImage().then(() => {
-    control = new Control(ctx, bee);
-    control.addLeftEvent();
-    draw();
-  });
+  control = new Control(ctx, bee);
+  control.addLeftEvent();
+  draw();
 }
 
 function draw(time = 0) {

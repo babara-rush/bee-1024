@@ -9,6 +9,7 @@ export class Bee {
   lastShootTime = 0;
   shootSpeed = 500;
   ammo = [];
+  imgLoaded = false;
 
   constructor() {
     this.x = window.innerWidth / 2 - this.width / 2;
@@ -16,8 +17,10 @@ export class Bee {
   }
 
   loadImage() {
+    if(this.imgLoaded) return Promise.resolve();
     return new Promise(resolve => {
       this.image.src = './bee.jpeg';
+      this.imgLoaded = true;
       this.image.onload = () => resolve();
     })
   }
