@@ -6,14 +6,70 @@
   <title>蜜蜂大战</title>
   <style>
     canvas {
-        /*background-color: #000;*/
-        width: 100vw;
-        height: 100vh;
+      width: 100vw;
+      height: 100vh;
+    }
+    .result {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      display: none;
+      z-index: 2;
+    }
+    
+    .result[data-show='true'] {
+      display: flex;
+      background-color: rgba(255, 255, 255, 0.3);
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      gap: 20px;
+    }
+    
+    img {
+        display: none;
+    }
+    
+    @keyframes showImage {
+        from {
+            transform: scale(0);
+        }
+        to {
+            transform: scale(1);
+        }
+    }
+
+    .result[data-show='true'] img[data-show='true'] {
+      display: block;
+      animation-name: showImage;
+      animation-duration: 0.5s;
+    }
+    
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 20px;
+      background-color: #71efc9;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      display: none;
+    }
+    button[data-show='true'] {
+      display: block;
     }
   </style>
 </head>
 <body>
 <canvas id="game"></canvas>
+<div id="result" class="result">
+  <img id="fail" src="./game_over.jpg" alt="" >
+  <img id="success" src="./game_success.jpg" alt="" >
+  <button id="fail-button">老子不信了，重来</button>
+  <button id="success-button">果然我是最棒的</button>
+</div>
 <script src="./index.js" type="module"></script>
 </body>
 </html>

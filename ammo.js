@@ -24,4 +24,12 @@ export class Ammo {
     this.x = this.x + this.speed * Math.cos(this.angle);
     this.y = this.y + this.speed * Math.sin(this.angle);
   }
+
+  isHitBee(bee) {
+    const centerX = this.x + this.width / 2;
+    const centerY = this.y + this.height / 2;
+    const beeXArea = [bee.x, bee.x + bee.width];
+    const beeYArea = [bee.y, bee.y + bee.height];
+    return centerX >= beeXArea[0] && centerX <= beeXArea[1] && centerY >= beeYArea[0] && centerY <= beeYArea[1];
+  }
 }

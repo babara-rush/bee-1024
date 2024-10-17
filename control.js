@@ -6,7 +6,9 @@ export class Control {
   bee;
   opponentCount = 10;
   opponentCol = 5;
-  opponent = []
+  opponent = [];
+  isGameOver = false;
+  isSuccess = false;
 
   constructor(context) {
     this.context = context;
@@ -20,7 +22,41 @@ export class Control {
     }
   }
 
+  fail() {
+    const result = document.querySelector('#result');
+    const fail = document.querySelector('#fail');
+    const failBtn = document.querySelector('#fail-button');
+    result.setAttribute('data-show', 'true')
+    fail.setAttribute('data-show', 'true')
+    failBtn.setAttribute('data-show', 'true')
+    failBtn.addEventListener('click', () => {
+      window.location.reload();
+    })
+  }
+
+  success() {
+    const result = document.querySelector('#result');
+    const success = document.querySelector('#success');
+    const successBtn = document.querySelector('#success-button');
+    result.setAttribute('data-show', 'true')
+    success.setAttribute('data-show', 'true')
+    successBtn.setAttribute('data-show', 'true')
+    successBtn.addEventListener('click', () => {
+      window.location.reload();
+    })
+  }
+
   async draw(time) {
+    if (this.isGameOver) {
+      this.context.clearRect(0, 0, window.innerWidth, window.innerHeight);
+      this.fail();
+      return;
+    }
+    if (this.isSuccess) {
+      this.context.clearRect(0, 0, window.innerWidth, window.innerHeight);
+      this.success();
+      return;
+    }
     this.context.clearRect(0, 0, window.innerWidth, window.innerHeight);
     await Promise.all([this.bee.loadImage(), ...this.opponent.map(opponent => opponent.loadImage())])
     this.drawPlayer();
@@ -28,6 +64,13 @@ export class Control {
     this.bee.shoot(time, this.context);
     this.opponent.forEach(opponent => opponent.fly(time, this.context));
     this.opponent.forEach(opponent => opponent.shoot(time, this.context));
+    this.opponent.forEach(opponent => opponent.collisionCheck(this.bee, this.context));
+    if (this.bee.isHit(this.opponent)) {
+      this.isGameOver = true;
+    }
+    if (this.opponent.every(opponent => opponent.destroyed)) {
+      this.isSuccess = true;
+    }
   }
 
   drawPlayer() {

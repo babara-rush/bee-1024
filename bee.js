@@ -50,4 +50,11 @@ export class Bee {
     this.ammo.push(new Ammo(this.x + this.width / 3, this.y + 5));
     this.ammo.push(new Ammo(this.x + (2 * this.width) / 3, this.y + 5));
   }
+
+  isHit(bees) {
+    return bees.some(item => {
+      if (item.destroyed) return false;
+      return item.ammo.some(ammo => ammo.isHitBee(this));
+    })
+  }
 }

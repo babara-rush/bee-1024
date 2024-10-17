@@ -16,7 +16,8 @@ export class Opponent {
   angle;
   lastFlyTime = 0;
   flyGap = 200;
-  gap = 10
+  gap = 10;
+  destroyed = false;
 
   constructor(x, y) {
     this.x = x;
@@ -83,6 +84,10 @@ export class Opponent {
   }
 
   fly(time, ctx) {
+    if (this.destroyed) {
+      ctx.clearRect(this.x, this.y, this.width, this.height);
+      return;
+    }
     if (time - this.lastFlyTime < this.flyGap) return;
     this.lastFlyTime = time;
     this.checkIsEdge(this.x, this.y);
@@ -100,9 +105,20 @@ export class Opponent {
     })
   }
 
-  destroy() {}
+  collisionCheck(bee, ctx) {
+    if(bee.ammo.some(ammo => ammo.isHitBee(this))) {
+      this.destroy(ctx)
+    }
+  }
+
+  destroy(ctx) {
+    this.destroyed = true;
+    this.ammo = [];
+    ctx.clearRect(this.x, this.y, this.width, this.height);
+  }
 
   drawAmmo(ctx) {
+    if (this.destroyed) return;
     if (this.ammo.length === 0) return;
     this.ammo.forEach(item => {
       item.draw(ctx);
@@ -112,6 +128,9 @@ export class Opponent {
   }
 
   shoot(time, ctx) {
+    if (this.destroyed) {
+      ctx.clearRect(this.x, this.y, this.width, this.height);
+    }
     this.drawAmmo(ctx);
     if (!time || time - this.lastShootTime < this.shootSpeed) return;
     this.lastShootTime = time;
