@@ -147,7 +147,6 @@ export class Opponent {
     }
     const ammoPos = bee.ammo.findIndex(ammo => ammo.isHitBee(this));
     if (ammoPos != -1) {
-      console.log('触发')
       bee.ammo.splice(ammoPos, 1)
       this.destroy()
     }
