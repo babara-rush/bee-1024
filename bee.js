@@ -1,4 +1,5 @@
 import { Ammo } from './ammo.js';
+import { AudioControl } from './audio.js';
 export class Bee {
   x;
   y;
@@ -17,9 +18,9 @@ export class Bee {
   }
 
   loadImage() {
-    if(this.imgLoaded) return Promise.resolve();
+    if (this.imgLoaded) return Promise.resolve();
     return new Promise(resolve => {
-      this.image.src = './bee.jpeg';
+      this.image.src = './character.png';
       this.imgLoaded = true;
       this.image.onload = () => resolve();
     })
@@ -49,6 +50,7 @@ export class Bee {
     this.lastShootTime = time;
     this.ammo.push(new Ammo(this.x + this.width / 3, this.y + 5));
     this.ammo.push(new Ammo(this.x + (2 * this.width) / 3, this.y + 5));
+    AudioControl.playShoot()
   }
 
   isHit(bees) {
